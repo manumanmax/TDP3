@@ -8,7 +8,10 @@ int main()
 
     string input;
     cin >> input;
-    cout << input << endl;
+
+    for(auto letter:input){
+        cout << letter << endl;
+    }
     cout << "CR check" << endl;
     return 0;
 }
