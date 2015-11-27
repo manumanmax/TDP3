@@ -1,42 +1,86 @@
 #include <iostream>
+#include <stdio.h>
 #include <string>
-
+#include <vector>
 using namespace std;
 
-bool counter(int& longestChain, const string input1, const string input2){
-    int secondChainStartIndex = 0;
-    bool subChain = false;
+int counter(int size, int index1, int index2, const string input1, const string input2){
+    int elseLocalMin = 0;
     int localMaximum = 0;
-    for(auto letter1:input1){
-        for(unsigned int i = secondChainStartIndex; secondChainStartIndex < input2.length(); i++){
-            if(letter1 == input2[i]){
-                cout << letter1 << " = " << input2[i] << " : " << i << std::endl;
-                secondChainStartIndex = i;
-                subChain = true;
-                localMaximum++;
+    char buffer[10];
+    for(unsigned int i = index1; i < input1.length(); i++){
+        for(unsigned int j = index2; j < input2.length(); j++){
+            if(input1[i] == input2[j]){
+                index1 = i+1;
+                index2 = j+1;
+                size++;
                 break;
+            }else{
+                cout << "go to read index1["; sprintf(buffer, "%d",index1); printf("%s",buffer);
+                cout << "] and index2["; sprintf(buffer, "%d",index2 + 1); printf("%s",buffer);
+                cout << "]" << endl;
+                if(index1 < input1.length() && index2 < input2.length())
+                    localMaximum = counter(size,index2+1 , index1 ,input2, input1);
             }
-
-        }
-        if(localMaximum > longestChain){
-            longestChain = localMaximum;
         }
     }
-    return subChain;
+    if(localMaximum > size)
+        return localMaximum;
+    else
+        return size;
+}
+
+string getSubstrings(vector<string>& vStrings, string substring, int idx1, int idx2, const string s1, const string s2, bool rec){
+
+    for(; idx1 < s1.length(); idx1++){
+        for(; idx2 < s2.length(); idx2++){
+            if(s1[idx1] == s2[idx2]){
+                substring.push_back(s1[idx1]);
+            }else{
+                if(rec){
+                    string localString = "";
+                    localString.push_back(s2[idx1]);
+                    vStrings.push_back(getSubstrings(vStrings, localString, idx2, idx1+1, s2,s1));
+
+                    break;
+                }else{
+
+                }
+            }
+        }
+    }
+    return substring;
+}
+
+string getOneSubstring(int idx1, int idx2, const string s1, const string s2){
+    for(; idx1 < s1.length(); idx1++){
+        for(; idx2 < s2.length(); idx2++){
+            if(s1[idx1] == s2[idx2]){
+                substring.push_back(s1[idx1]);
+            }
+        }
+    }
+    return substring;
 }
 
 
 int main()
 {
-    int longestChain = 0;
-    string input1;
-    string input2;
-    cin >> input1;
-    cin >> input2;
+    string input1 = "bcacbcabbaccbab";
+    string input2 = "bccabccbbabacbc";
 
-    bool isSubChain = counter(longestChain,input1,input2);
+    //cin >> input1;
+    //cin >> input2;
+    vector<string> vS;
+    vS.push_back(getSubstrings(vS,"",0,0,input1,input2));
+    int sizeMax = 0;
+    for(string str: vS){
+            cout << str << endl;
+        if(str.length() > sizeMax)
+            sizeMax = str.length();
+    }
 
+    cout << sizeMax << endl;
 
-    cout << longestChain << endl;
     return 0;
 }
