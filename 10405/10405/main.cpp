@@ -30,22 +30,19 @@ int counter(int size, int index1, int index2, const string input1, const string 
         return size;
 }
 
-string getSubstrings(vector<string>& vStrings, string substring, int idx1, int idx2, const string s1, const string s2, bool rec){
+string getSubstrings(vector<string>& vStrings, string substring, int idx1, int idx2, const string s1, const string s2){
 
     for(; idx1 < s1.length(); idx1++){
         for(; idx2 < s2.length(); idx2++){
             if(s1[idx1] == s2[idx2]){
                 substring.push_back(s1[idx1]);
             }else{
-                if(rec){
                     string localString = "";
                     localString.push_back(s2[idx1]);
                     vStrings.push_back(getSubstrings(vStrings, localString, idx2, idx1+1, s2,s1));
 
                     break;
-                }else{
 
-                }
             }
         }
     }
@@ -53,12 +50,18 @@ string getSubstrings(vector<string>& vStrings, string substring, int idx1, int i
 }
 
 string getOneSubstring(int idx1, int idx2, const string s1, const string s2){
+    string substring;
+    int localIdx2 = idx2;
     for(; idx1 < s1.length(); idx1++){
-        for(; idx2 < s2.length(); idx2++){
+        for(idx2 = localIdx2; idx2 < s2.length(); idx2++){
+            //printf("%d -> ",idx2);
             if(s1[idx1] == s2[idx2]){
+                localIdx2 = idx2+1;
                 substring.push_back(s1[idx1]);
+                break;
             }
         }
+        cout << endl;
     }
     return substring;
 }
@@ -66,21 +69,24 @@ string getOneSubstring(int idx1, int idx2, const string s1, const string s2){
 
 int main()
 {
-    string input1 = "bcacbcabbaccbab";
-    string input2 = "bccabccbbabacbc";
+    string input1 = "abcdgh";
+    string input2 = "aedfhr";
 
     //cin >> input1;
     //cin >> input2;
-    vector<string> vS;
+    /*vector<string> vS;
     vS.push_back(getSubstrings(vS,"",0,0,input1,input2));
     int sizeMax = 0;
     for(string str: vS){
             cout << str << endl;
         if(str.length() > sizeMax)
             sizeMax = str.length();
-    }
+    }*/
 
-    cout << sizeMax << endl;
+    //cout << sizeMax << endl;
+
+    cout << getOneSubstring(0, 0, input1, input2);
+
 
     return 0;
 }
