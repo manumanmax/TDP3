@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1448646662 source:c:\users\emmanuel\documents\github\tdp3\103\main.cpp
+	<iostream>
+	<stdio.h>
+	<string>
+	<vector>
+	<stdlib.h>
+
