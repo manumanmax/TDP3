@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-string getOneSubstring(string localString, int idx1, int idx2, const string s1, const string s2);
+//string getOneSubstring(string localString, int idx1, int idx2, const string s1, const string s2);
 
 /*
 int counter(int size, int index1, int index2, const string input1, const string input2){
@@ -32,7 +32,7 @@ int counter(int size, int index1, int index2, const string input1, const string 
     else
         return size;
 }*/
-
+/*
 string getSubstrings(vector<string>& vStrings, string substring, int idx1, int idx2, const string s1, const string s2){
 
     int localIdx2 = idx2;
@@ -57,8 +57,8 @@ string getSubstrings(vector<string>& vStrings, string substring, int idx1, int i
     }
     return substring;
 
-}
-
+}*/
+/*
 string getOneSubstring(string substring, int idx1, int idx2, const string s1, const string s2){
 
     int localIdx2 = idx2;
@@ -75,18 +75,96 @@ string getOneSubstring(string substring, int idx1, int idx2, const string s1, co
     }
     return substring;
 }
+*/
 
+
+class Chain{
+public:
+    Chain(){chainLenght=0;};
+    void AddPair(pair<int,int> p){pairs.push_back(p);chainLenght++;};
+    unsigned int lenght(){return chainLenght;};
+    void printChain(){for(auto p:pairs) printf("%d -> %d\n",p.first,p.second);}
+private:
+    vector< pair<int,int> > pairs;
+    unsigned int chainLenght;
+};
+
+
+pair<int,int> getOnePair(int& startIndex1, int& startIndex2, string& s1, string& s2){
+    int tmpStartIndex = startIndex2;
+    while(s1[startIndex1] != '\n'){
+        while(s2[startIndex2] != '\n'){
+            if(s1[startIndex1] == s2[startIndex2]){
+                printf("%c = %c : %d = %d\n", s1[startIndex1], s2[startIndex2], startIndex1, startIndex2);
+                return pair<int,int>(startIndex1++, startIndex2++);
+            }
+            startIndex2++;
+        }
+        startIndex1++;
+        startIndex2 = tmpStartIndex;
+    }
+    return pair<int,int>(-1,-1);
+}
+
+bool neighbors(pair<int,int> a, pair<int,int> b){
+    if((a.first == b.first+1 && a.second == b.second+1)
+       || (a.first == b.first-1 && a.second == b.second-1))
+        return true;
+    return false;
+
+}
+
+Chain getOneChain(int& startIndex1, int& startIndex2, string& s1, string& s2){
+    int tmpStartIndex2 = startIndex2; //used to go back to the position when two pair are not neighbors
+    Chain chain;
+    pair<int,int> currentPair = getOnePair(startIndex1,startIndex2,s1,s2);
+    pair<int,int> nextPair = getOnePair(startIndex1,startIndex2,s1,s2);
+    if(currentPair == pair<int,int>(-1,-1) || nextPair == pair<int,int>(-1,-1)) return chain;
+    if(neighbors(currentPair,nextPair)){
+            chain.AddPair(currentPair);
+            chain.AddPair(nextPair);
+    }
+    currentPair = nextPair;
+    startIndex2 = tmpStartIndex2; // we begin at the first start
+    nextPair = getOnePair(startIndex1,startIndex2,s1,s2);
+    while(nextPair != pair<int,int>(-1,-1)){
+        if(neighbors(currentPair,nextPair)){
+            chain.AddPair(nextPair);
+            currentPair = nextPair;
+        }else{
+
+        }
+    }
+
+    return chain;
+}
 
 
 
 int main()
 {
-    string input1 = "bcacbcabbaccbab";
-    string input2 = "bccabccbbabacbc";
+    string input1 = "bcacbcabbaccbab\n";
+    string input2 = "bccabccbbabacbc\n";
+    int startIndex1 = 0;
+    int startIndex2 = 0;
+    //vector< pair<int,int> > couples;
+    vector< Chain > chains;
+
+    Chain c = getOneChain(startIndex1, startIndex2, input1, input2);
+
+    /*pair<int,int> currentPair = getOnePair(startIndex1, startIndex2, input1, input2);
+
+    while(currentPair != pair<int,int>(-1,-1)){
+        couples.push_back(currentPair);
+        currentPair = getOnePair(startIndex1, startIndex2, input1, input2);
+    }*/
+
+
+
 
     //cin >> input1;
     //cin >> input2;
-    vector<string> vS;
+    /*vector<string> vS;
     vS.push_back(getSubstrings(vS,"",0,0,input1,input2));
     vS.push_back(getSubstrings(vS,"",0,0,input2,input1));
     int sizeMax = 0;
@@ -97,7 +175,7 @@ int main()
     }
     cout << sizeMax << endl;
 
-    cout << getOneSubstring("",0,0,input2,input1) << endl;
+    cout << getOneSubstring("",0,0,input2,input1) << endl;*/
 
     return 0;
 }
